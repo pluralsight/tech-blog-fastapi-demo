@@ -1,0 +1,49 @@
+version: "3.7"
+
+services:
+  flask: &flask-app-base
+    build:
+      context: ./flask
+    volumes:
+      - ./ml-models:/opt/app/ml-models
+      - ./flask/app.py:/opt/app/app.py
+      - ./gunicorn.py:/opt/app/gunicorn.py
+    env_file:
+      - ./envs/.env
+    environment:
+      FLASK_APP: /opt/app/app.py
+    ports:
+      - "5000:5000"
+    command: /bin/bash
+  flask-app-dev:
+    <<: *flask-app-base
+    environment:
+      FLASK_ENV: development
+    command: flask run --host 0.0.0.0 --port 5000
+  flask-app-prod:
+    <<: *flask-app-base
+    environment:
+      WORKER_CLASS: sync
+    command: gunicorn -c gunicorn.py app:app
+
+  fastapi: &fastapi-app-base
+    build:
+      context: ./fastapi
+    volumes:
+      - ./ml-models:/opt/app/ml-models
+      - ./fastapi/app.py:/opt/app/app.py
+      - ./fastapi/schemas.py:/opt/app/schemas.py
+      - ./gunicorn.py:/opt/app/gunicorn.py
+    ports:
+      - "5001:5000"
+    env_file:
+      - ./envs/.env
+    command: /bin/bash
+  fastapi-app-dev:
+    <<: *fastapi-app-base
+    command: uvicorn --reload --workers 1 --host 0.0.0.0 --port 5000 app:app
+  fastapi-app-prod:
+    <<: *fastapi-app-base
+    environment:
+      WORKER_CLASS: uvicorn.workers.UvicornWorker
+    command: gunicorn -c gunicorn.py app:app
