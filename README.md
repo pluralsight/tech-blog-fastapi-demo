@@ -131,3 +131,7 @@ Response body:
   "text": <str>
 }
 ```
+
+## License
+
+This code is licensed under the [Apache 2.0 license](https://github.com/pluralsight/tech-blog-fastapi-demo/blob/master/LICENSE).
