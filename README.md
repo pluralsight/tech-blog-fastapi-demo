@@ -2,7 +2,7 @@
 
 example code of converting a Flask API serving a machine-learning model to FastAPI.
 
-**include link to blog post once it's up**
+Used for the blog post [Porting Flask to FastAPI for ML Model Serving](https://pluralsight.com/tech-blog/porting-flask-to-fastapi-for-ml-model-serving/)
 
 ## running the API
 
