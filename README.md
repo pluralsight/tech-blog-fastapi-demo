@@ -1,8 +1,8 @@
 # Pluralsight Tech Blog - Converting Flask to FastAPI for Serving ML Models
 
-example code of converting a Flask API serving a machine-learning model to FastAPI.
+Example code of converting a Flask API serving a machine-learning model to FastAPI.
 
-Used for the blog post [Porting Flask to FastAPI for ML Model Serving](https://pluralsight.com/tech-blog/porting-flask-to-fastapi-for-ml-model-serving/)
+Used for the blog post [Porting Flask to FastAPI for ML Model Serving](https://pluralsight.com/tech-blog/porting-flask-to-fastapi-for-ml-model-serving/).
 
 ## running the API
 
