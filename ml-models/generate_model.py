@@ -1,5 +1,6 @@
-import argparse
 import pickle
+
+import typer
 
 import numpy as np
 from sklearn.datasets import fetch_20newsgroups
@@ -9,7 +10,25 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
 
 
-def train_model(pickle_file_path: str, seed: int = 42) -> None:
+def train_model(
+    pickle_file_path: str = typer.Option(
+        "./model.pkl",
+        "--file",
+        "-f",
+        help="filepath to write pickle file",
+        show_default=True,
+    ),
+    seed: int = typer.Option(
+        42,
+        "--seed",
+        "-s",
+        help="random-number seed passed to scikit-learn",
+        show_default=True,
+    ),
+) -> None:
+    """pulls a subset of the "20 Newsgroups" dataset and builds a simple
+    Naive Bayes classifier.
+    """
     data = fetch_20newsgroups(
         subset="all",
         remove=("headers", "footers", "quotes"),
@@ -33,32 +52,12 @@ def train_model(pickle_file_path: str, seed: int = 42) -> None:
     )
     pipe.fit(X_train, y_train)
 
-    print(f"train score: {pipe.score(X_train, y_train):.3f}")
-    print(f"test score: {pipe.score(X_test, y_test):.3f}")
+    typer.echo(f"train score: {pipe.score(X_train, y_train):.3f}")
+    typer.echo(f"test score: {pipe.score(X_test, y_test):.3f}")
 
     with open(pickle_file_path, "wb") as wf:
         pickle.dump(pipe, wf)
 
 
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--file",
-        "-f",
-        default="./model.pkl",
-        help="target filepath to write model pickle file",
-    )
-    parser.add_argument(
-        "--seed",
-        "-s",
-        default=42,
-        type=int,
-        help="random seed for train/test split and model training",
-    )
-    args = parser.parse_args()
-    return args
-
-
 if __name__ == "__main__":
-    args = parse_args()
-    train_model(args.file, args.seed)
+    typer.run(train_model)
